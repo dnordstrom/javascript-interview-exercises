@@ -76,5 +76,7 @@ class CompanyList {
     const list = new CompanyList(options)
     
     items.forEach(item => list.add(item))
+
+    return list
   }
 }
