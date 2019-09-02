@@ -18,7 +18,7 @@ class CompanyList {
     
     // Add click event listener to list element. Clicks on individual child
     // items will bubble up to this parent--no need for multiple listeners.
-    this.element.addEventListener('click', this.onClick);
+    this.element.addEventListener('click', this.onClick)
   }
   
   /**
