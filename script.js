@@ -40,7 +40,7 @@
     }
   })
 
-  // Request notification permission
+  // Request notification permission if browser supports it
   if ('Notification' in window) {
     Notification.requestPermission()
   }
