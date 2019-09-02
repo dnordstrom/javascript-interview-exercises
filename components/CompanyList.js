@@ -7,6 +7,9 @@
  * @class CompanyList
  */
 class CompanyList {
+  /** Array of companies (name, ID, location) */
+  companies = []
+
   /**
    * Creates an instance of CompanyList.
    *
@@ -20,6 +23,24 @@ class CompanyList {
     // items will bubble up to this parent--no need for multiple listeners.
     this.element.addEventListener('click', this.onClick);
   }
+
+  render() {
+    this.element.innerHTML = ''
+
+    this.companies.forEach(company => {
+      const item = document.createElement('li')
+    
+      // Put these here so we don't have to lookup the company array on click
+      item.setAttribute('data-company-id', company.id)
+      item.setAttribute('data-company-name', company.name)
+      item.setAttribute('data-company-location', company.location)
+      
+      // Text displayed on page
+      item.textContent = `${company.name} (${company.location})`
+      
+      this.element.appendChild(item)
+    })
+  }
   
   /**
    * Add a new item to the list of companies.
@@ -28,17 +49,8 @@ class CompanyList {
    * @memberof CompanyList
    */
   add(company) {
-    const item = document.createElement('li')
-    
-    // Put these here so we don't have to lookup the company array on click
-    item.setAttribute('data-company-id', company.id)
-    item.setAttribute('data-company-name', company.name)
-    item.setAttribute('data-company-location', company.location)
-    
-    // Text displayed on page
-    item.textContent = `${company.name} (${company.location})`
-    
-    this.element.appendChild(item)
+    this.companies.push(company)
+    this.render()
   }
   
   /**
@@ -72,9 +84,10 @@ class CompanyList {
    * @param {object} options `CompanyList` constructor options
    * @memberof CompanyList
    */
-  static from(items, options = {}) {
+  static from(companies, options = {}) {
     const list = new CompanyList(options)
-    
-    items.forEach(item => list.add(item))
+    list.companies = companies
+
+    return list
   }
 }
