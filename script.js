@@ -1,8 +1,5 @@
 (() => {
 
-  // Request notification permission on page load
-  Notification.requestPermission()
-
   const companies = [
     { id: 1, name: 'Amazon', location: 'Seattle' },
     { id: 2, name: 'Apple', location: 'Cupertino' },
@@ -30,6 +27,8 @@
     listElement.appendChild(listItem)
   })
 
+  // Add click event listener to list element. Clicks on individual child items
+  // will bubble up to this parent--no need for multiple listeners.
   listElement.addEventListener('click', ({ target }) => {
     // Check if clicked element is a list item with a company name. Adding a CSS
     // class to the element and using `listItem.classList.contains()` to check
@@ -40,6 +39,11 @@
       notify(`${target.getAttribute('data-company-name')} clicked!`)
     }
   })
+
+  // Request notification permission
+  if ('Notification' in window) {
+    Notification.requestPermission()
+  }
 
   /**
    * Display notification message in system tray. If notifications are not
