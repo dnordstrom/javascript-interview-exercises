@@ -10,6 +10,6 @@
   ]
 
   // Create CompanyList instance for `#list` element using the API data
-  CompanyList.from(companies, { selector: '#list'})
-
+  const list = CompanyList.from(companies, { selector: '#list'})
+  list.render().renderFilters()
 })()

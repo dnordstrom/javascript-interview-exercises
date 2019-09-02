@@ -9,6 +9,7 @@
 class CompanyList {
   /** Array of companies (name, ID, location) */
   companies = []
+  activeFilters = []
 
   /**
    * Creates an instance of CompanyList.
@@ -21,13 +22,67 @@ class CompanyList {
     
     // Add click event listener to list element. Clicks on individual child
     // items will bubble up to this parent--no need for multiple listeners.
-    this.element.addEventListener('click', this.onClick)
+    this.element.addEventListener('click', this.onClick.bind(this))
+
+    // Create location filter element and insert it above the list
+    this.filterElement = document.createElement('div')
+    document.body.insertBefore(this.filterElement, this.element)
+
+    // Listen for clicks on location filter
+    this.filterElement.addEventListener('click', this.onFilterClick.bind(this))
   }
 
+  /**
+   * Render location filter buttons on page. A button for each unique location
+   * is added to the filter container created in the constructor.
+   *
+   * @memberof CompanyList
+   */
+  renderFilters() {
+    const locations = this.getLocations() // Get unique locations
+
+    // Empty filters to re-render
+    this.filterElement.innerHTML = ''
+
+    // Create and show filter buttons for locations
+    locations.forEach(location => {
+      const button = document.createElement('a')
+      
+      button.innerText = location
+      button.href = '' // Make the link look like a link
+      button.style.marginRight = '1rem'
+      button.style.fontWeight =
+        this.activeFilters.includes(location) ? 'bold' : 'normal'
+
+      this.filterElement.appendChild(button)
+    })
+  }
+
+  /**
+   * Render the list on the page, filtered based on location filter if one or
+   * more locations are selected. Returns itself to allow chained calls.
+   *
+   * @returns {CompanyList}
+   * @memberof CompanyList
+   */
   render() {
+    let visibleCompanies
+
+    // Get a filtered list of which companies should be visible based on
+    // selected location filter (if necessary)
+    if (this.activeFilters.length) {
+      visibleCompanies = this.companies.filter(company => {
+        return this.activeFilters.includes(company.location)
+      })
+    } else {
+      visibleCompanies = this.companies // No filter selected
+    }
+
+    // Empty the list to re-render
     this.element.innerHTML = ''
 
-    this.companies.forEach(company => {
+    // Create and append list items
+    visibleCompanies.forEach(company => {
       const item = document.createElement('li')
     
       // Put these here so we don't have to lookup the company array on click
@@ -40,6 +95,35 @@ class CompanyList {
       
       this.element.appendChild(item)
     })
+
+    return this
+  }
+
+  /**
+   * Click handler for location filter. Adds or removes clicked location from
+   * active filters and re-renders list.
+   *
+   * @param {Event} event Click event
+   * @memberof CompanyList
+   */
+  onFilterClick(event) {
+    event.preventDefault()
+
+    // Only act on link clicks
+    if (event.target.matches('a')) {
+      // Check if clicked location is currently filtered
+      const index = this.activeFilters.indexOf(event.target.innerText)
+
+      // Toggle filter state
+      if (index !== -1) {
+        this.activeFilters.splice(index, 1)
+      } else {
+        this.activeFilters.push(event.target.innerText)
+      }
+
+      // Re-render list and filters
+      this.render().renderFilters()
+    }
   }
   
   /**
@@ -50,7 +134,19 @@ class CompanyList {
    */
   add(company) {
     this.companies.push(company)
-    this.render()
+  }
+
+  /**
+   * Returns an array of all distinct company locations.
+   *
+   * @returns {array}
+   * @memberof CompanyList
+   */
+  getLocations() {
+    // Return unique locations by creating a set from the companies array, then
+    // parsing the set back into an array. "Not great, but not terrible"
+    // Chernobyl coding.
+    return [...new Set(this.companies.map(company => company.location))]
   }
   
   /**
@@ -88,7 +184,6 @@ class CompanyList {
     const list = new CompanyList(options)
     
     list.companies = companies
-    list.render()
 
     return list
   }
