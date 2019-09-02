@@ -35,8 +35,14 @@
     // for it is probably faster than matching against a CSS selector, but has
     // worse browser compatibility (and checking `className` itself is a bit
     // ugly if we add multiple class names).
-    if (target.matches('li') && target.hasAttribute('data-company-name')) {
-      notify(`${target.getAttribute('data-company-name')} clicked!`)
+    if (target.matches('li') &&
+        target.hasAttribute('data-company-name') &&
+        target.hasAttribute('data-company-location')) {
+
+      const name = target.getAttribute('data-company-name')
+      const location = target.getAttribute('data-company-location')
+      
+      notify(`${name} is located in ${location}`)
     }
   })
 
