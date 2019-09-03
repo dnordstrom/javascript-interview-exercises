@@ -25,8 +25,8 @@ export default function CompanyList(props) {
 
   // Filter click handler
   const onFilterClick = ({ target }) => {
-    const newState = { ...state } // Create new state from old
-    const index = state.filters.indexOf(target.innerText)
+    const newState = { ...state }; // Create new state from old
+    const index = state.filters.indexOf(target.innerText);
 
     // Modify filter state accordingly
     if (index !== -1) {
@@ -40,7 +40,7 @@ export default function CompanyList(props) {
 
   // Company item click handler
   const onItemClick = (company) => {
-    Notifier.notify(`${company.name} is located in ${company.location}`)
+    Notifier.notify(`${company.name} is located in ${company.location}`);
   };
 
   return (

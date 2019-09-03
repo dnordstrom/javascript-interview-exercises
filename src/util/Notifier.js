@@ -13,7 +13,7 @@ export default class Notifier {
    */
   static requestPermissions() {
     if ('Notification' in window) {
-      Notification.requestPermission()
+      Notification.requestPermission();
     }
   }
   
@@ -32,9 +32,9 @@ export default class Notifier {
   static notify(message) {
     // Check if notifications are supported and we were granted permission
     if (('Notification' in window) && Notification.permission === 'granted') {
-      new Notification(message)
+      new Notification(message);
     } else {
-      console.log(`NOTIFICATION: ${message}`)
+      console.log(`NOTIFICATION: ${message}`);
     }
   }
 }
