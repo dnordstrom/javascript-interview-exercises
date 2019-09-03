@@ -1,9 +1,11 @@
 import React from 'react';
 
 export default function CompanyListItem(props) {
-  const { name, location } = props;
+  const { name, location, onClick } = props;
 
   return (
-    <li onClick={props.onClick}>{name} ({location})</li>
+    <li {...{onClick}}>
+      {name} ({location})
+    </li>
   )
 }
