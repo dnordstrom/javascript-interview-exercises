@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import CompanyListItem from './CompanyListItem';
-import Filter from './Filter';
+import FilterButton from './FilterButton';
 import Notifier from '../util/Notifier';
 
 export default function CompanyList(props) {
@@ -46,12 +46,12 @@ export default function CompanyList(props) {
   return (
     <div>
       {locations.map(location => (
-        <Filter
+        <FilterButton
           key={location}
           active={state.filters.includes(location)}
           location={location}
           onClick={onFilterClick}>
-        </Filter>
+        </FilterButton>
       ))}
 
       <ul>
