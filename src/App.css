@@ -1,6 +1,17 @@
 .App {
-  padding: 1em;
+  padding: 2em;
   text-align: center;
+}
+
+.CompanyList__List {
+  list-style-type: none;
+}
+
+.CompanyList__Filter {
+  border: 1px solid #000;
+  border-radius: 3px;
+  cursor: pointer;
+  padding: 3px 6px;
 }
 
 .CompanyList__Filter:not(:last-of-type) {
@@ -8,5 +19,6 @@
 }
 
 .CompanyList__Filter--active {
-  font-weight: bold;
+  background: teal;
+  color: #fff;
 }

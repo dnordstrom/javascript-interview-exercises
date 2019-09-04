@@ -1,68 +1,102 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { connect } from "react-redux";
 import CompanyListItem from './CompanyListItem';
-import Filter from './Filter';
+import FilterButton from './FilterButton';
+import Actions from '../actions';
 import Notifier from '../util/Notifier';
 
-export default function CompanyList(props) {
-  const { companies } = props;
-  const [state, setState] = useState({ filters: [] });
-  const locations = [...new Set(companies.map(company => company.location))];
-  
-  // Returns companies that should be visible according to active filter
-  const getFilteredCompanies = () => {
-    let filteredCompanies;
+class CompanyList extends React.Component {
+  /**
+   * Handles location filter clicks.
+   *
+   * @param {Event} event
+   * @memberof CompanyList
+   */
+  onFilterClick(event) {
+    event.preventDefault();
 
-    if (state.filters.length) {
-      filteredCompanies = companies.filter(
-        company => state.filters.includes(company.location)
-      )
-    } else {
-      filteredCompanies = companies;
-    }
-
-    return filteredCompanies;
+    this.props.toggleFilter(event.target.innerText);
   }
 
-  // Filter click handler
-  const onFilterClick = ({ target }) => {
-    const newState = { ...state }; // Create new state from old
-    const index = state.filters.indexOf(target.innerText);
-
-    // Modify filter state accordingly
-    if (index !== -1) {
-      newState.filters.splice(index, 1);
-    } else {
-      newState.filters.push(target.innerText);
-    }
-
-    setState(newState);
-  }
-
-  // Company item click handler
-  const onItemClick = (company) => {
+  /**
+   * Handles list item clicks.
+   *
+   * @param {object} company
+   * @memberof CompanyList
+   */
+  onItemClick(company) {
     Notifier.notify(`${company.name} is located in ${company.location}`);
-  };
+  }
 
-  return (
-    <div>
-      {locations.map(location => (
-        <Filter
-          key={location}
-          active={state.filters.includes(location)}
-          location={location}
-          onClick={onFilterClick}>
-        </Filter>
-      ))}
+  /**
+   * Renders location filter buttons.
+   *
+   * @returns Location filter buttons
+   * @memberof CompanyList
+   */
+  renderFilters() {
+    const { companies, filters } = this.props;
+    const locations = [...new Set(companies.map(company => company.location))];
 
-      <ul>
-        {getFilteredCompanies().map(company => (
-          <CompanyListItem
-            key={company.id}
-            onClick={onItemClick.bind(null, company)}
-            {...company}>
-          </CompanyListItem>
-        ))}
-      </ul>
-    </div>
-  )
-}
+    return locations.map(location => (
+      <FilterButton
+        active={filters.includes(location)}
+        key={location}
+        location={location}
+        onClick={this.onFilterClick.bind(this)}>
+      </FilterButton>
+    ));
+  }
+
+  /**
+   * Renders company list items based on location filters.
+   *
+   * @returns Unordered list of companies
+   * @memberof CompanyList
+   */
+  renderList() {
+    const { filteredCompanies } = this.props;
+
+    return (
+      <ul className="CompanyList__List">
+          {filteredCompanies.map(company => (
+            <CompanyListItem
+              key={company.id}
+              onClick={this.onItemClick.bind(this, company)}
+              {...company}>
+            </CompanyListItem>
+          ))}
+        </ul>
+    );
+  }
+
+  /**
+   * Renders the component.
+   *
+   * @returns
+   * @memberof CompanyList
+   */
+  render() {
+    return (
+      <div className="CompanyList">
+        {this.renderFilters()}
+        {this.renderList()}
+      </div>
+    );
+  }
+};
+
+const mapStateToProps = state => ({
+  companies: state.companies,
+  filters: state.filters,
+  filteredCompanies: state.filteredCompanies
+});
+
+const mapDispatchToProps = dispatch => ({
+  toggleFilter: location => dispatch(Actions.toggleFilter(location))
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(CompanyList);

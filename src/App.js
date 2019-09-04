@@ -1,17 +1,24 @@
 import React from 'react';
+import { Provider as ReduxProvider } from 'react-redux';
 import CompanyList from './components/CompanyList';
 import Notifier from './util/Notifier';
-import companies from './api'
+import configureStore from './store';
 import './App.css';
 
-function App() {
-  Notifier.requestPermissions();
+class App extends React.Component {
+  render() {
+    return (
+      <ReduxProvider store={configureStore(window.REDUX_INITIAL_DATA)}>
+        <div className="App">
+          <CompanyList></CompanyList>
+        </div>
+      </ReduxProvider>
+    );
+  }
 
-  return (
-    <div className="App">
-      <CompanyList companies={companies}></CompanyList>
-    </div>
-  );
+  componentDidMount() {
+    Notifier.requestPermissions();
+  }
 }
 
 export default App;
