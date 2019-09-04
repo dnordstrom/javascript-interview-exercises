@@ -1,5 +1,5 @@
 import React from 'react';
-import { connect } from "react-redux";
+import { connect } from 'react-redux';
 import CompanyListItem from './CompanyListItem';
 import FilterButton from './FilterButton';
 import Actions from '../actions';
