@@ -6,33 +6,19 @@ import Actions from '../actions';
 
 class CompanyList extends React.Component {
   /**
-   * Handles location filter clicks.
-   *
-   * @param {Event} event
-   * @memberof CompanyList
-   */
-  onFilterClick(event) {
-    event.preventDefault();
-
-    this.props.toggleFilter(event.target.innerText);
-  }
-
-  /**
    * Renders location filter buttons.
    *
    * @returns Location filter buttons
    * @memberof CompanyList
    */
   renderFilters() {
-    const { companies, filters } = this.props;
+    const { companies } = this.props;
     const locations = [...new Set(companies.map(company => company.location))];
 
     return locations.map(location => (
       <FilterButton
-        active={filters.includes(location)}
         key={location}
-        location={location}
-        onClick={this.onFilterClick.bind(this)}>
+        location={location}>
       </FilterButton>
     ));
   }
