@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import CompanyListItem from './CompanyListItem';
 import FilterButton from './FilterButton';
 import Actions from '../actions';
-import Notifier from '../util/Notifier';
 
 class CompanyList extends React.Component {
   /**
@@ -16,16 +15,6 @@ class CompanyList extends React.Component {
     event.preventDefault();
 
     this.props.toggleFilter(event.target.innerText);
-  }
-
-  /**
-   * Handles list item clicks.
-   *
-   * @param {object} company
-   * @memberof CompanyList
-   */
-  onItemClick(company) {
-    Notifier.notify(`${company.name} is located in ${company.location}`);
   }
 
   /**
@@ -60,11 +49,7 @@ class CompanyList extends React.Component {
     return (
       <ul className="CompanyList__List">
           {filteredCompanies.map(company => (
-            <CompanyListItem
-              key={company.id}
-              onClick={this.onItemClick.bind(this, company)}
-              {...company}>
-            </CompanyListItem>
+            <CompanyListItem company={company} key={company.id}></CompanyListItem>
           ))}
         </ul>
     );
