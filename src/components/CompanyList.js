@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import CompanyListItem from './CompanyListItem';
 import FilterButton from './FilterButton';
-import Notifier from '../util/Notifier';
 
 export default function CompanyList(props) {
   const { companies } = props;
@@ -38,11 +37,6 @@ export default function CompanyList(props) {
     setState(newState);
   }
 
-  // Company item click handler
-  const onItemClick = (company) => {
-    Notifier.notify(`${company.name} is located in ${company.location}`);
-  };
-
   return (
     <div>
       {locations.map(location => (
@@ -58,8 +52,7 @@ export default function CompanyList(props) {
         {getFilteredCompanies().map(company => (
           <CompanyListItem
             key={company.id}
-            onClick={onItemClick.bind(null, company)}
-            {...company}>
+            company={company}>
           </CompanyListItem>
         ))}
       </ul>
